@@ -1,5 +1,4 @@
 vendor
-config/environment.yml
 build/ci/logs
 build/ci/api
 *.swp
