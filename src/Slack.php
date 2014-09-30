@@ -6,6 +6,7 @@
  */
 namespace PhpSlack;
 
+use Exception;
 use PhpSlack\Utils\RestApiClient;
 
 class Slack
