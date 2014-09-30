@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="php-slack" default="build" basedir="../../">
-    <target name="build" depends="prepare,lint,phploc,phpmd,phpcs,phpcpd,unit-tests"/>
+    <target name="build" depends="prepare,lint,phploc,phpmd,phpcs,phpcpd,tests"/>
 
     <property name="codebase" value="" />
 
@@ -75,7 +75,7 @@
     </target>
 
     <!-- PHP Unit -->
-    <target name="unit-tests" description="Run tests with PHPUnit">
+    <target name="tests" description="Run tests with PHPUnit">
         <exec executable="phpunit" failonerror="true">
             <arg value="-c"/>
             <arg path="${basedir}"/>
@@ -83,13 +83,6 @@
             <arg path="${basedir}/build/ci/logs/tests/"/>
             <arg value="--coverage-clover"/>
             <arg path="${basedir}/build/ci/logs/tests/clover.xml"/>
-        </exec>
-    </target>
-
-    <!-- integration tests -->
-    <target name="integration-tests" description="Run tests with PHPUnit">
-        <exec executable="phpunit" failonerror="true">
-            <arg value="${basedir}/tests/integrations" />
         </exec>
     </target>
 </project>

@@ -8,15 +8,9 @@
             "email": "toni.lopez@shazam.com"
         }
     ],
-    "repositories": [
-        {
-            "url": "git@gitlab.uk.shazamteam.net:infra-tools/common-config.git",
-            "type": "git"
-        }
-    ],
     "autoload": {
         "psr-4": {
-            "PhpSlack\\Tests\\": ["tests/", "tests/unit/", "tests/integrations/"],
+            "PhpSlack\\Tests\\": ["tests/", "tests/cases/"],
             "PhpSlack\\": "src/"
         }
     }
