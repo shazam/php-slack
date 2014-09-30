@@ -19,10 +19,5 @@
             "PhpSlack\\Tests\\": ["tests/", "tests/unit/", "tests/integrations/"],
             "PhpSlack\\": "src/"
         }
-    },
-    "require": {
-        "silex/silex": "~1.1",
-        "monolog/monolog": "1.10.*",
-        "shazam/common-config": "0.1.0"
     }
 }
