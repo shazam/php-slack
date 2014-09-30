@@ -13,9 +13,9 @@ use Exception;
 class RestApiClient
 {
     /**
-     * @var string
+     * @const string
      */
-    private $baseUrl;
+    const BASE_URL = 'https://slack.com/api/';
 
     /**
      * @param string
@@ -26,9 +26,8 @@ class RestApiClient
      * @param string $baseUrl
      * @param string $token
      */
-    public function __construct($baseUrl, $token)
+    public function __construct($token)
     {
-        $this->baseUrl = $baseUrl;
         $this->token = $token;
     }
 
@@ -73,7 +72,7 @@ class RestApiClient
     private function query($path, $method, $params = array())
     {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->baseUrl . $path);
+        curl_setopt($ch, CURLOPT_URL, self::BASE_URL . $path);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         if ($method == 'POST') {

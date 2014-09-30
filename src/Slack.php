@@ -31,11 +31,11 @@ class Slack
     private static $channels;
 
     /**
-     * @param string $token
+     * @param RestApiClient $client
      */
-    public function __construct($token)
+    public function __construct(RestApiClient $client)
     {
-        $this->client = new RestApiClient(self::BASE_URL, $token);
+        $this->client = $client;
     }
 
     /**
