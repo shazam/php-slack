@@ -74,7 +74,7 @@ class SlackTest extends PHPUnit_Framework_TestCase
         $this->client
             ->expects($this->once())
             ->method('post')
-            ->with('chat.postMessage', array('channel' => $channelId, 'text' => 'a text'))
+            ->with('chat.postMessage', array('channel' => $channelId, 'text' => 'a text', 'link_names' => 1))
             ->will($this->returnValue(array('channel' => array('id' => $channelId))));
 
         $slack = new Slack($this->client);
@@ -101,33 +101,6 @@ class SlackTest extends PHPUnit_Framework_TestCase
         $slack->sendMessage('channel-name-2', 'a text');
     }
 
-    public function testSendMessageKnownChannel()
-    {
-        $channelId = 13;
-        $channels = array('channels' => array(array('id' => 13, 'name' => 'channel-name-1')));
-
-        $this->client
-            ->expects($this->once())
-            ->method('get')
-            ->with('channels.list')
-            ->will($this->returnValue($channels));
-        $this->client
-            ->expects($this->exactly(2))
-            ->method('post')
-            ->with('chat.postMessage', array('channel' => $channelId, 'text' => 'a text'))
-            ->will($this->returnValue(array('channel' => array('id' => $channelId))));
-
-        $slack = new Slack($this->client);
-
-        $slack->sendMessage('channel-name-1', 'a text');
-
-        $this->client
-            ->expects($this->never())
-            ->method('get');
-
-        $slack->sendMessage('channel-name-1', 'a text');
-    }
-
     /**
      * @expectedException \Exception
      */
@@ -146,13 +119,15 @@ class SlackTest extends PHPUnit_Framework_TestCase
         $slack->addUserToChannel('channel-name-1', 'user');
     }
 
-    /**
-     * @expectedException \Exception
-     */
-    public function testAddUserToChannelChannelNotFound()
+    public function testSendMessageKnownChannel()
     {
-        $users = array('members' => array(array('id' => 123, 'name' => 'user')));
-        $channels = array('channels' => array());
+        $channelId = 13;
+        $channels = array('channels' => array(array('id' => 13, 'name' => 'channel-name-1')));
+        $users = array(
+            'members' => array(
+                array('id' => 123, 'name' => 'tools', 'profile' => array('email'  => 'tools@shazam.com'))
+            )
+        );
 
         $this->client
             ->expects($this->at(0))
@@ -164,10 +139,21 @@ class SlackTest extends PHPUnit_Framework_TestCase
             ->method('get')
             ->with('channels.list')
             ->will($this->returnValue($channels));
+        $this->client
+            ->expects($this->exactly(2))
+            ->method('post')
+            ->with('chat.postMessage', array('channel' => $channelId, 'text' => 'for @tools.', 'link_names' => 1))
+            ->will($this->returnValue(array('channel' => array('id' => $channelId))));
 
         $slack = new Slack($this->client);
 
-        $slack->addUserToChannel('channel-name-4', 'user');
+        $slack->sendMessage('channel-name-1', 'for %s.', 'tools@shazam.com');
+
+        $this->client
+            ->expects($this->never())
+            ->method('get');
+
+        $slack->sendMessage('channel-name-1', 'for %s.', 'tools@shazam.com');
     }
 
     public function testAddUserToChannels()
@@ -186,6 +172,24 @@ class SlackTest extends PHPUnit_Framework_TestCase
 
         $slack = new Slack($this->client);
 
-        $slack->addUserToChannel('channel-name-6', 'user');
+        $slack->addUserToChannel('channel-name-6', 'tools@shazam.com');
+    }
+
+    /**
+     * @expectedException \Exception
+     */
+    public function testAddUserToChannelChannelNotFound()
+    {
+        $channels = array('channels' => array());
+
+        $this->client
+            ->expects($this->at(0))
+            ->method('get')
+            ->with('channels.list')
+            ->will($this->returnValue($channels));
+
+        $slack = new Slack($this->client);
+
+        $slack->addUserToChannel('channel-name-4', 'tools@shazam.com');
     }
 }

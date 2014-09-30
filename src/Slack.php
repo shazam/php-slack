@@ -55,10 +55,20 @@ class Slack
     /**
      * @param string $channelName
      * @param string $message
-     * 
+     * @param string $mentionedUser
      */
-    public function sendMessage($channelName, $message)
+    public function sendMessage($channelName, $message, $mentionedUser = '')
     {
+        if (!empty($mentionedUser)) {
+            $users = $this->getUsers();
+            if (!isset($users[$mentionedUser])) {
+                throw new Exception('User not found.');
+            }
+
+            $mention = '@' . self::$users[$mentionedUser]['name'];
+            $message = sprintf($message, $mention);
+        }
+
         if (!isset(self::$channels[$channelName])) {
             self::$channels = $this->getChannels();
 
@@ -69,7 +79,8 @@ class Slack
 
         $params = array(
             'channel' => self::$channels[$channelName],
-            'text' => $message
+            'text' => $message,
+            'link_names' => 1
         );
 
         $this->client->post('chat.postMessage', $params);
@@ -77,12 +88,12 @@ class Slack
 
     /**
      * @param string $channelName
-     * @param string $userName
+     * @param string $userEmail
      */
-    public function addUserToChannel($channelName, $userName)
+    public function addUserToChannel($channelName, $userEmail)
     {
         $users = $this->getUsers();
-        if (!isset($users[$userName])) {
+        if (!isset($users[$userEmail])) {
             throw new Exception('User not found.');
         }
 
@@ -96,7 +107,7 @@ class Slack
 
         $params = array(
             'channel' => self::$channels[$channelName],
-            'user' => $users[$userName]
+            'user' => $users[$userEmail]['id']
         );
         $this->client->post('channels.invite', $params);
     }
@@ -111,7 +122,10 @@ class Slack
 
             $users = array();
             foreach ($response['members'] as $user) {
-                $users[$user['name']] = $user['id'];
+                $users[$user['profile']['email']] = array(
+                    'id' => $user['id'],
+                    'name' => $user['name']
+                );
             }
 
             self::$users = $users;
