@@ -60,6 +60,10 @@ class Slack
     {
         if (!isset(self::$channels[$channelName])) {
             self::$channels = $this->getChannels();
+
+            if (!isset(self::$channels[$channelName])) {
+                throw new Exception('Channel not found.');
+            }
         }
 
         $params = array(
@@ -83,6 +87,10 @@ class Slack
 
         if (!isset(self::$channels[$channelName])) {
             self::$channels = $this->getChannels();
+
+            if (!isset(self::$channels[$channelName])) {
+                throw new Exception('Channel not found.');
+            }
         }
 
         $params = array(
