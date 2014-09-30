@@ -45,7 +45,10 @@ class Slack
     public function createChannel($channelName)
     {
         $response = $this->client->post('channels.join', array('name' => $channelName));
+
         self::$channels[$channelName] = $response['channel']['id'];
+
+        return $response['channel']['id'];
     }
 
     /**

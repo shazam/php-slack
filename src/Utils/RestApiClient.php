@@ -22,6 +22,10 @@ class RestApiClient
      */
     private $token;
 
+    /**
+     * @param string $baseUrl
+     * @param string $token
+     */
     public function __construct($baseUrl, $token)
     {
         $this->baseUrl = $baseUrl;
