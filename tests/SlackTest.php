@@ -220,7 +220,8 @@ class SlackTest extends PHPUnit_Framework_TestCase
                 'user' => 123,
                 'ts' => strtotime('2014-12-12 02:12:12'),
                 'file' => array('url' => 'url.com')
-            )
+            ),
+            array()
         );
 
         $channels = array('channels' => array(array('id' => 13, 'name' => 'channel-name-1')));

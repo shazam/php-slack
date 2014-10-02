@@ -124,7 +124,7 @@ class Slack
      */
     public function getChannelMessages($channelName, $fromTimestamp = 0)
     {
-        $users = $this->getUsers();
+        $this->getUsers();
         if (!isset(self::$channels[$channelName])) {
             self::$channels = $this->getChannels();
 
