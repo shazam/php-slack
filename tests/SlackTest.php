@@ -192,4 +192,56 @@ class SlackTest extends PHPUnit_Framework_TestCase
 
         $slack->addUserToChannel('channel-name-4', 'tools@shazam.com');
     }
+
+    public function testGetMessages()
+    {
+        $time = '2014-04-04 12:12:!2';
+        $expectededMessages = array(
+            array(
+                'text' => 'Text1',
+                'user' => 'tools@shazam.com',
+                'time' => '2014-12-12 02:12:12'
+            ),
+            array(
+                'text' => 'Text2',
+                'user' => 'tools@shazam.com',
+                'time' => '2014-12-12 02:12:12',
+                'file' => 'url.com'
+            )
+        );
+        $messagesFromSlack = array(
+            array(
+                'text' => 'Text1',
+                'user' => 123,
+                'ts' => strtotime('2014-12-12 02:12:12')
+            ),
+            array(
+                'text' => 'uploaded some image and commented: Text2',
+                'user' => 123,
+                'ts' => strtotime('2014-12-12 02:12:12'),
+                'file' => array('url' => 'url.com')
+            )
+        );
+
+        $channels = array('channels' => array(array('id' => 13, 'name' => 'channel-name-1')));
+
+        $this->client
+            ->expects($this->at(0))
+            ->method('get')
+            ->with('channels.list')
+            ->will($this->returnValue($channels));
+        $messagesFromSlack = array('messages' => $messagesFromSlack);
+        $this->client
+            ->expects($this->at(1))
+            ->method('post')
+            ->with('channels.history', array('channel' => 13, 'oldest' => strtotime($time), 'count' => 1000))
+            ->will($this->returnValue($messagesFromSlack));
+
+        $slack = new Slack($this->client);
+
+        $this->assertEquals(
+            $expectededMessages,
+            $slack->getChannelMessages('channel-name-1', strtotime($time))
+        );
+    }
 }

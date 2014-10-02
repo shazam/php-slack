@@ -29,6 +29,11 @@ class Slack
     /**
      * @var array
      */
+    private static $userIds;
+
+    /**
+     * @var array
+     */
     private static $channels;
 
     /**
@@ -112,6 +117,55 @@ class Slack
         $this->client->post('channels.invite', $params);
     }
 
+    /*
+     * @param string $channelName
+     * @param int $fromTimestamp
+     * @return array
+     */
+    public function getChannelMessages($channelName, $fromTimestamp = 0)
+    {
+        $users = $this->getUsers();
+        if (!isset(self::$channels[$channelName])) {
+            self::$channels = $this->getChannels();
+
+            if (!isset(self::$channels[$channelName])) {
+                throw new Exception('Channel not found.');
+            }
+        }
+
+        $params = array(
+            'channel' => self::$channels[$channelName],
+            'oldest' => $fromTimestamp,
+            'count' => 1000
+        );
+        $rawMessages = $this->client->post('channels.history', $params);
+
+        $messages = array();
+        foreach ($rawMessages['messages'] as $rawMessage) {
+            if (!isset($rawMessage['text'])) {
+                continue;
+            }
+            $user = isset($rawMessage['user']) ? self::$userIds[$rawMessage['user']] : $rawMessage['username'];
+            $message = array(
+                'text' => $rawMessage['text'],
+                'user' => $user,
+                'time' => date('Y-m-d H:i:s', $rawMessage['ts'])
+            );
+
+            if (isset($rawMessage['file'])) {
+                $message['file'] = $rawMessage['file']['url'];
+                $pos = strpos($message['text'], 'and commented: ');
+                $message['text'] = $pos === false
+                    ? ''
+                    : substr($message['text'], $pos + strlen('and commented: '));
+            }
+
+            $messages[] = $message;
+        }
+
+        return $messages;
+    }
+
     /**
      * @return array of users
      */
@@ -126,9 +180,11 @@ class Slack
                     'id' => $user['id'],
                     'name' => $user['name']
                 );
+                $userIds[$user['id']] = $user['profile']['email'];
             }
 
             self::$users = $users;
+            self::$userIds = $userIds;
         }
 
         return self::$users;
