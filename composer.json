@@ -2,6 +2,7 @@
     "name": "shazam/php-slack",
     "description": "PHP Slack library",
     "type": "library",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name": "Toni Lopez",
