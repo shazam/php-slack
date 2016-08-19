@@ -34,8 +34,8 @@ class RestApiClient
     private $token;
 
     /**
-     * @param string $baseUrl
-     * @param string $token
+     * RestApiClient constructor.
+     * @param $token
      */
     public function __construct($token)
     {
@@ -75,10 +75,11 @@ class RestApiClient
     }
 
     /**
-     * @param string $path
-     * @param string $method GET|POST
+     * @param $path
+     * @param $method
      * @param array $params
-     * @return array
+     * @return mixed
+     * @throws Exception
      */
     private function query($path, $method, $params = array())
     {

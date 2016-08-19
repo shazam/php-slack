@@ -1,18 +1,23 @@
 {
-    "name": "shazam/php-slack",
-    "description": "PHP Slack library",
-    "type": "library",
-    "license": "Apache-2.0",
-    "authors": [
-        {
-            "name": "Toni Lopez",
-            "email": "toni.lopez@shazam.com"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "PhpSlack\\Tests\\": ["tests/", "tests/cases/"],
-            "PhpSlack\\": "src/"
-        }
-    }
+	"name": "shazamcloud/php-slack",
+	"description": "PHP Slack library",
+	"type": "library",
+	"keywords": ["slack"],
+	"license": "Apache-2.0",
+	"authors": [
+		{
+			"name": "Brad Bonkoski",
+			"email": "brad.bonkoski@shazam.com"
+		},
+		{
+			"name": "Toni Lopez",
+			"email": "toni.lopez@shazam.com"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"PhpSlack\\Tests\\": ["tests/", "tests/cases/"],
+			"PhpSlack\\": "src/"
+		}
+	}
 }

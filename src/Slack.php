@@ -70,9 +70,10 @@ class Slack
     }
 
     /**
-     * @param string $channelName
-     * @param string $message
+     * @param $channelName
+     * @param $message
      * @param string $mentionedUser
+     * @throws Exception
      */
     public function sendMessage($channelName, $message, $mentionedUser = '')
     {
@@ -104,8 +105,9 @@ class Slack
     }
 
     /**
-     * @param string $channelName
-     * @param string $userEmail
+     * @param $channelName
+     * @param $userEmail
+     * @throws Exception
      */
     public function addUserToChannel($channelName, $userEmail)
     {
@@ -129,10 +131,11 @@ class Slack
         $this->client->post('channels.invite', $params);
     }
 
-    /*
-     * @param string $channelName
+    /**
+     * @param $channelName
      * @param int $fromTimestamp
      * @return array
+     * @throws Exception
      */
     public function getChannelMessages($channelName, $fromTimestamp = 0)
     {
