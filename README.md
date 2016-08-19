@@ -9,5 +9,5 @@ $slack = new PhpSlack\Slack($client);
 
 $slack->createChannel("test-slack-channel-1");
 $slack->sendMessage('test-slack-channel-1', 'that is a test message');
-$slack->addUserToChannel('test-slack-channel-1', 'bradb');
+$slack->addUserToChannel('test-slack-channel-1', 'Hans Solo');
 ```
