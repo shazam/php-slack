@@ -19,9 +19,9 @@
 namespace PhpSclack\Tests;
 
 use PhpSlack\Slack;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class SlackTest extends PHPUnit_Framework_TestCase
+class SlackTest extends TestCase
 {
     /**
      * @var PhpSlack\Utils\RestApiClient
